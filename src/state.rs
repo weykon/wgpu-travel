@@ -124,7 +124,7 @@ impl State {
             ..Default::default()
         });
 
-        // 向投掷手，绑定他们的资源，让着色器访问到纹理视图和采样器这些东西
+        // 向投资投掷手，绑定他们的资源，让着色器访问到纹理视图和采样器这些东西
         let texture_bind_group_layout =
             device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
                 entries: &[
