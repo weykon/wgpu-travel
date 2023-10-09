@@ -1,5 +1,5 @@
 use crate::ammo::{self, Vertex, INDICES, VERTICES};
-use crate::texture::Texture;
+use crate::texture;
 use wgpu::util::DeviceExt;
 use winit::{event::WindowEvent, window::Window};
 
@@ -17,6 +17,7 @@ pub struct State {
     index_buffer: wgpu::Buffer,
     num_indices: u32,
     diffuse_bind_group: wgpu::BindGroup,
+    diffuse_texture: texture::Texture,
 }
 
 impl State {
@@ -71,12 +72,8 @@ impl State {
         // 添加纹理
         // 取字节，并将其加载到 image 对象中，然后转换为 rgba 动态数组。
         let diffuse_bytes = include_bytes!("../assets/tree.png");
-        let diffuse_image = image::load_from_memory(diffuse_bytes).unwrap();
-        let diffuse_rgba = diffuse_image.to_rgba8();
-        use image::GenericImageView;
-        let dimensions = diffuse_image.dimensions();
         let diffuse_texture =
-            Texture::from_bytes(&device, &queue, diffuse_bytes, "../assets/tree.png").unwrap();
+            texture::Texture::from_bytes(&device, &queue, diffuse_bytes, "../assets/tree.png").unwrap();
 
         // 向投资投掷手，绑定他们的资源，让着色器访问到纹理视图和采样器这些东西
         let texture_bind_group_layout =
@@ -204,6 +201,7 @@ impl State {
             index_buffer,
             num_indices,
             diffuse_bind_group,
+            diffuse_texture
         }
     }
 
