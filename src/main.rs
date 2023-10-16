@@ -1,13 +1,13 @@
 mod ammo;
-mod state;
 mod texture;
+use wgpu_learn::extra::update_diffuse_texture;
 use winit::{
     event::*,
     event_loop::{ControlFlow, EventLoop},
     window::WindowBuilder,
 };
 
-use crate::state::State;
+use wgpu_learn::state::State;
 
 fn main() {
     println!("Hello, Here's weykon's wgpu learning repo!");
@@ -20,7 +20,7 @@ async fn process() {
     let event_loop = EventLoop::new();
     let window = WindowBuilder::new().build(&event_loop).unwrap();
     // 窗口设置
-    let mut state = State::new(&window).await;
+    let mut app_state = State::new(&window).await;
 
     // 事件遍历
     event_loop.run(move |event, _, control_flow| match event {
@@ -28,7 +28,7 @@ async fn process() {
             ref event,
             window_id,
         } if window_id == window.id() => {
-            if !state.input(event) {
+            if !app_state.input(event) {
                 match event {
                     WindowEvent::CloseRequested
                     | WindowEvent::KeyboardInput {
@@ -41,22 +41,36 @@ async fn process() {
                         ..
                     } => *control_flow = ControlFlow::Exit,
                     WindowEvent::Resized(physical_size) => {
-                        state.resize(*physical_size);
+                        app_state.resize(*physical_size);
+                    }
+                    WindowEvent::KeyboardInput {
+                        input:
+                            KeyboardInput {
+                                state: ElementState::Pressed,
+                                virtual_keycode: Some(VirtualKeyCode::Space),
+                                ..
+                            },
+                        ..
+                    } => {
+                        println!("Space key pressed!");
+                        update_diffuse_texture::exec(&mut app_state);
+                        app_state.update();
+                        window.request_redraw();
                     }
                     WindowEvent::ScaleFactorChanged { new_inner_size, .. } => {
                         // new_inner_size 是 &&mut 类型，因此需要解引用两次
-                        state.resize(**new_inner_size);
+                        app_state.resize(**new_inner_size);
                     }
                     _ => {}
                 }
             }
         }
         Event::RedrawRequested(window_id) if window_id == window.id() => {
-            state.update();
-            match state.render() {
+            app_state.update();
+            match app_state.render() {
                 Ok(_) => {}
                 // 当展示平面的上下文丢失，就需重新配置
-                Err(wgpu::SurfaceError::Lost) => state.resize(state.size),
+                Err(wgpu::SurfaceError::Lost) => app_state.resize(app_state.size),
                 // 系统内存不足时，程序应该退出。
                 Err(wgpu::SurfaceError::OutOfMemory) => *control_flow = ControlFlow::Exit,
                 // 所有其他错误（过期、超时等）应在下一帧解决
