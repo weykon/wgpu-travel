@@ -1,3 +1,4 @@
+
 pub struct Camera {
    pub eye: glam::Vec3,
    pub target: glam::Vec3,

@@ -1,5 +1,6 @@
 use crate::ammo::{Vertex, INDICES, VERTICES};
 use crate::camera::{self, Camera, CameraUniform};
+use crate::camera_ctrl::CameraController;
 use crate::texture;
 use wgpu::util::DeviceExt;
 use winit::{event::WindowEvent, window::Window};
@@ -23,6 +24,7 @@ pub struct State {
     camera_uniform: CameraUniform,
     camera_buffer: wgpu::Buffer,
     camera_bind_group: wgpu::BindGroup,
+    camera_controller: CameraController,
 }
 
 impl State {
@@ -170,6 +172,10 @@ impl State {
             }],
             label: Some("camera_bind_group"),
         });
+
+        // 添加摄像机控制器
+        let camera_controller = CameraController::new(0.2);
+
         let redner_pipeline_layout =
             device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
                 label: Some("Render Pipeline Layout"),
@@ -255,6 +261,7 @@ impl State {
             camera_uniform,
             camera_buffer,
             camera_bind_group,
+            camera_controller,
         }
     }
 
@@ -268,10 +275,21 @@ impl State {
     }
 
     pub fn input(&mut self, event: &WindowEvent) -> bool {
-        false
+        self.camera_controller.process_events(event)
     }
 
-    pub fn update(&mut self) {}
+    pub fn update(&mut self) {
+        // 更新摄像机
+        self.camera_controller.update_camera(&mut self.camera);
+        self.camera_uniform.update_view_proj(&self.camera);
+        // 更新摄像机缓冲区
+        //（这里再次看到了这个qeueue，也算是从一开始的第一次再次使用。从这里看出他是作为更为底层的添加设置。）
+        self.queue.write_buffer(
+            &self.camera_buffer,
+            0,
+            bytemuck::cast_slice(&[self.camera_uniform]),
+        );
+    }
 
     pub fn render(&mut self) -> Result<(), wgpu::SurfaceError> {
         // 这个get_current_texture是等待surface提供一个新的SurfaceTexture
