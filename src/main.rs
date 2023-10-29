@@ -6,7 +6,7 @@ use winit::{
     event_loop::{ControlFlow, EventLoop},
     window::WindowBuilder,
 };
-
+mod instance; 
 use wgpu_learn::state::State;
 
 fn main() {
