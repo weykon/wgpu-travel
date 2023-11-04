@@ -1,6 +1,9 @@
+use std::f32::consts;
+
 use crate::ammo::{Vertex, INDICES, VERTICES};
 use crate::camera::{self, Camera, CameraUniform};
 use crate::camera_ctrl::CameraController;
+use crate::instance::{Instance, InstanceRaw, INSTANCE_DISPLACEMENT, NUM_INSTANCES_PER_ROW};
 use crate::texture;
 use wgpu::util::DeviceExt;
 use winit::{event::WindowEvent, window::Window};
@@ -25,6 +28,8 @@ pub struct State {
     camera_buffer: wgpu::Buffer,
     camera_bind_group: wgpu::BindGroup,
     camera_controller: CameraController,
+    instances: Vec<Instance>,
+    instance_buffer: wgpu::Buffer,
 }
 
 impl State {
@@ -190,7 +195,7 @@ impl State {
                 module: &shader,
                 entry_point: "vs_main",
                 // buffers 字段告诉 wgpu 要把什么类型的顶点数据传递给顶点着色器。我们会在顶点着色器中指定顶点，所以这里先留空
-                buffers: &[Vertex::desc()],
+                buffers: &[Vertex::desc(), InstanceRaw::desc()],
             },
             fragment: Some(wgpu::FragmentState {
                 module: &shader,
@@ -244,6 +249,33 @@ impl State {
         });
         let num_indices = INDICES.len() as u32;
 
+        let instances = (0..NUM_INSTANCES_PER_ROW)
+            .flat_map(|z| {
+                (0..NUM_INSTANCES_PER_ROW).map(move |x| {
+                    let position = glam::Vec3 {
+                        x: x as f32,
+                        y: 0.0,
+                        z: z as f32,
+                    } - INSTANCE_DISPLACEMENT;
+
+                    let rotation = if position.length().abs() <= std::f32::EPSILON {
+                        // 这一行特殊确保在坐标 (0, 0, 0) 处的对象不会被缩放到 0
+                        // 因为错误的四元数会影响到缩放
+                        glam::Quat::from_axis_angle(glam::Vec3::Z, 0.0)
+                    } else {
+                        glam::Quat::from_axis_angle(position.normalize(), consts::FRAC_PI_4)
+                    };
+
+                    Instance { position, rotation }
+                })
+            })
+            .collect::<Vec<_>>();
+        let instance_data = instances.iter().map(Instance::to_raw).collect::<Vec<_>>();
+        let instance_buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
+            label: Some("Instance Buffer"),
+            contents: bytemuck::cast_slice(&instance_data),
+            usage: wgpu::BufferUsages::VERTEX,
+        });
         Self {
             surface,
             device,
@@ -262,6 +294,8 @@ impl State {
             camera_buffer,
             camera_bind_group,
             camera_controller,
+            instances,
+            instance_buffer,
         }
     }
 
@@ -334,9 +368,12 @@ impl State {
 
             render_pass.set_bind_group(1, &self.camera_bind_group, &[]);
             render_pass.set_vertex_buffer(0, self.vertex_buffer.slice(..));
+            render_pass.set_vertex_buffer(1, self.instance_buffer.slice(..));
             render_pass.set_index_buffer(self.index_buffer.slice(..), wgpu::IndexFormat::Uint16);
 
-            render_pass.draw_indexed(0..self.num_indices, 0, 0..1);
+            render_pass.set_index_buffer(self.index_buffer.slice(..), wgpu::IndexFormat::Uint16);
+
+            render_pass.draw_indexed(0..self.num_indices, 0, 0..self.instances.len() as _);
         }
 
         self.queue.submit(std::iter::once(encoder.finish()));
