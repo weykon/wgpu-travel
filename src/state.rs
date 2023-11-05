@@ -1,13 +1,14 @@
 use std::f32::consts;
 
 use crate::ammo::{Vertex, INDICES, VERTICES};
-use crate::camera::{self, Camera, CameraUniform};
+use crate::camera::{ Camera, CameraUniform};
 use crate::camera_ctrl::CameraController;
 use crate::instance::{Instance, InstanceRaw, INSTANCE_DISPLACEMENT, NUM_INSTANCES_PER_ROW};
 use crate::texture;
 use wgpu::util::DeviceExt;
 use winit::{event::WindowEvent, window::Window};
 
+// 那么这么大篇幅的一个对象如何去减少点代码在这个文件呢？
 pub struct State {
     // 表面理解一下
     // 平面， 设备信息，程序队列，配置，屏幕大小的信息
@@ -360,19 +361,15 @@ impl State {
             // 此处开了一个作用域是为了，下面再次使用的encoder，
             // 不会被上面的encoder.begin_render_pass的可变引用占用
             // 这样在这个作用域drop掉后就可以在下面使用encoder了
-
             render_pass.set_pipeline(&self.render_pipeline);
             render_pass.set_bind_group(0, &self.diffuse_bind_group, &[]);
             render_pass.set_vertex_buffer(0, self.vertex_buffer.slice(..));
             render_pass.set_index_buffer(self.index_buffer.slice(..), wgpu::IndexFormat::Uint16);
-
             render_pass.set_bind_group(1, &self.camera_bind_group, &[]);
             render_pass.set_vertex_buffer(0, self.vertex_buffer.slice(..));
             render_pass.set_vertex_buffer(1, self.instance_buffer.slice(..));
             render_pass.set_index_buffer(self.index_buffer.slice(..), wgpu::IndexFormat::Uint16);
-
             render_pass.set_index_buffer(self.index_buffer.slice(..), wgpu::IndexFormat::Uint16);
-
             render_pass.draw_indexed(0..self.num_indices, 0, 0..self.instances.len() as _);
         }
 
