@@ -58,4 +58,48 @@ pass 之上还有一个encoder，问过，可以多个，只要记住，他是�
 将所有的rust代码转译到gpu上，因为我们此前所有执行的commands都可以通过这里
 把命令都转化到gpu可运作的内容
 
+## encoder 
+指令的“欢送” 
+下面的代码，是让我们记得在encoder和pass之间的关系，以最简单和最基本的视野去看，一下子就明朗很多。
+```rust
+// 创建一个 Encoder
+let mut encoder = device.create_command_encoder(&wgpu::CommandEncoderDescriptor {
+    label: Some("Render Encoder"),
+});
 
+// 开始一个新的 RenderPass
+{
+    let mut render_pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
+        label: Some("Render Pass"),
+        color_attachments: &[wgpu::RenderPassColorAttachment {
+            view: &view,
+            resolve_target: None,
+            ops: wgpu::Operations {
+                load: wgpu::LoadOp::Clear(wgpu::Color::BLACK),
+                store: true,
+            },
+        }],
+        depth_stencil_attachment: None,
+    });
+
+    // 设置管线状态
+    render_pass.set_pipeline(&render_pipeline);
+
+    // 绑定顶点缓冲区
+    render_pass.set_vertex_buffer(0, vertex_buffer.slice(..));
+
+    // 绑定索引缓冲区
+    render_pass.set_index_buffer(index_buffer.slice(..), wgpu::IndexFormat::Uint16);
+
+    // 绑定纹理和采样器
+    render_pass.set_bind_group(0, &bind_group, &[]);
+
+    // 提交绘制命令
+    render_pass.draw_indexed(0..index_count, 0, 0..1);
+}
+
+// 提交 Encoder
+queue.submit(Some(encoder.finish()));
+```
+
+然后主要是device来管理encoder的
