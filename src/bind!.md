@@ -103,3 +103,5 @@ queue.submit(Some(encoder.finish()));
 ```
 
 然后主要是device来管理encoder的
+
+然后进而我想到了深度测试的东西，那么在下一篇这个继续讨论[这里](./depth_stencil.md)
