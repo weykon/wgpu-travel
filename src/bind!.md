@@ -52,3 +52,10 @@ render_pass.set_index_buffer
 render_pass.draw_indexed
 ```
 然后最后用queue去submit这个pass
+
+
+pass 之上还有一个encoder，问过，可以多个，只要记住，他是用于编码的，
+将所有的rust代码转译到gpu上，因为我们此前所有执行的commands都可以通过这里
+把命令都转化到gpu可运作的内容
+
+
