@@ -1,33 +1,6 @@
-mod ammo;
-mod texture;
-use winit::{
-    event::*,
-    event_loop::{ControlFlow, EventLoop},
-    window::WindowBuilder,
-};
-mod app_event_handles;
-mod instance;
-use wgpu_learn::state::State;
-mod dictation;
-fn main() {
-    println!("Hello, Here's weykon's wgpu learning repo!");
-    println!("start the process from wrapping in the pollster, ever not know what this, \n So I gotta go ask gpt ");
-    println!("这是关于异步去执行的安全挂起，作者的解释说，state的初始化是异步的，所以来到了这个run这里需要用这个东西来处理异步函数下的事情，他比较轻量级，这个pollster");
-    dbg!("试试使用这个dbg!");
-    let debug_this_var = 32;
-    dbg!("试试这个变量：{}",debug_this_var);
-    pollster::block_on(process());
-}
+use winit::{event_loop::EventLoop, event::Event};
 
-// 看看这个函数名字是async的
-async fn process() {
-    env_logger::init();
-    let event_loop = EventLoop::new();
-    let window = WindowBuilder::new().build(&event_loop).unwrap();
-    // 窗口设置
-    let mut app_state = State::new(&window).await;
-    // 事件遍历
-    dbg!("事件遍历: 其实这里我是有个疑问，他的轮询是如何决定多久跑一次的，他的怎么样运作，和性能的事情有什么的。");
+pub fn handle_events(event_loop: &EventLoop<()>, window : &winit::window::Window) {
     event_loop.run(move |event, _, control_flow| match event {
         Event::WindowEvent {
             ref event,
@@ -59,4 +32,3 @@ async fn process() {
         _ => {}
     });
 }
-
