@@ -11,7 +11,7 @@ async fn process() -> () {
     let event_loop = EventLoop::new();
     let mut window = WindowBuilder::new().build(&event_loop);
 
-    handle_events(&event_loop);
+    handle_events(&event_loop , &window);
 
 
 
