@@ -8,4 +8,5 @@ pub mod pipeline;
 pub mod queue;
 pub mod surface;
 pub mod app;
-pub mod event; 
+pub mod event;
+pub mod window; 

@@ -1,9 +1,11 @@
 use super::my::Ready;
-use winit::window::Window;
+use winit::{event_loop::EventLoop, window::{Window, WindowBuilder}};
 
 impl Ready for Window {
+    type Input = EventLoop<()>;
     type Output = Window;
-    fn ready(&self, input: Self::Input) -> Self::Output {
-        Windowbuilder::new().build(&event_loop)
+
+    fn ready(&self, event_loop: Self::Input) -> Self::Output {
+        WindowBuilder::new().build(&event_loop).unwrap()
     }
 }
