@@ -1,6 +1,6 @@
-use winit::{event_loop::EventLoop, event::Event};
-
-pub fn handle_events(event_loop: &EventLoop<()>, window : &winit::window::Window) {
+use winit::{event::Event, event_loop::EventLoop};
+use super::state::AppState;
+pub fn handle_events(event_loop: &EventLoop<()>, window: &winit::window::Window, app_state: &AppState) {
     event_loop.run(move |event, _, control_flow| match event {
         Event::WindowEvent {
             ref event,

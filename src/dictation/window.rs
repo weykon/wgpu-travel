@@ -6,6 +6,6 @@ impl Ready for Window {
     type Output = Window;
 
     fn ready(&self, event_loop: Self::Input) -> Self::Output {
-        WindowBuilder::new().build(&event_loop).unwrap()
+
     }
 }
