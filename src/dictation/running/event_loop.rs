@@ -1,10 +1,3 @@
-use wgpu_learn::{extra::update_diffuse_texture, state::State};
-use winit::{
-    event::{ElementState, KeyboardInput, VirtualKeyCode, WindowEvent},
-    event_loop::ControlFlow,
-    window::Window,
-};
-
 pub fn handle_any_input(
     event: &WindowEvent,
     control_flow: &mut ControlFlow,

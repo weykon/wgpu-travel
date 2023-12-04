@@ -6,5 +6,5 @@ impl Ready for wgpu::Surface {
     }
     type Input = state::App;
 
-    type Output=();
+    type Output=Box<wgpu::Surface>;
 }
