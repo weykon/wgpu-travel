@@ -2,6 +2,5 @@
 pub trait Ready {
     type Input;
     type Output;
-    fn ready( input: Self::Input) -> Self::Output;
+    fn ready(input: Self::Input) -> Self::Output;
 }
-

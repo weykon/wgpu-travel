@@ -1,7 +1,7 @@
 use super::common::Ready;
 use super::state;
 use winit::event_loop::EventLoop;
-use winit::window::{Window};
+use winit::window::Window;
 
 pub(crate) async fn process() -> () {
     let mut app = state::App::new();
@@ -21,4 +21,9 @@ impl Ready for state::App {
         self.surface = wgpu::Surface::ready(&self);
         self.adapter =  wgpu::Adapter::ready(&self);
     }
+
+    type Input=state::App;
+
+    type Output=();
+
 }
