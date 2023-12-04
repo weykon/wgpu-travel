@@ -5,7 +5,6 @@ use winit::{
     event_loop::{ControlFlow, EventLoop},
     window::WindowBuilder,
 };
-mod app_event_handles;
 mod instance;
 use wgpu_learn::state::State;
 mod dictation;
