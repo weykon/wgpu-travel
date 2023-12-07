@@ -1,22 +1,28 @@
+use crate::dictation::app::state::App;
+
 use super::super::state;
 
 use super::super::common::Ready;
-use wgpu::Adapter;
 use futures::executor::block_on;
+use wgpu::Adapter;
 
 impl Ready for Adapter {
-    fn ready(app: Self::Input) -> Self::Output {
-        let future = app
-            .wgpu_instance
-            .as_mut()
-            .request_adapter(&wgpu::RequestAdapterOptions {
-                compatible_surface: Some(app.surface.as_ref()),
-                ..Default::default()
-            });
-        let adapter = block_on(future).expect("Failed to request adapter");
+    fn ready(app: &App) -> Self::Output {
+        let inst = app.wgpu_instance.as_mut().unwrap();
+        let surface = app.surface.as_mut().unwrap();
+        let future = inst.request_adapter(&wgpu::RequestAdapterOptions {
+            compatible_surface: Some(&surface),
+            ..Default::default()
+        });
+
+        let adapter = block_on(inst.request_adapter(&wgpu::RequestAdapterOptions {
+            compatible_surface: Some(&surface),
+            ..Default::default()
+        }));
+
         Box::new(adapter)
     }
 
-    type Input = state::App;
-    type Output = Box<wgpu::Adapter>;
+    type Output = Box<Option<Adapter>>;
 }
+

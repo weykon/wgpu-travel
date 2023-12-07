@@ -1,13 +1,10 @@
-use super::super::state;
-
+use crate::dictation::app::state::App;
 use winit::event_loop::EventLoop;
-
 use super::super::common::Ready;
 
 impl Ready for EventLoop<()> {
-    fn ready(_: Self::Input) -> Self::Output {
-        Box::new(EventLoop::new())
+    fn ready(app: &App) -> Self::Output {
+        Box::new(Some(EventLoop::new()))
     }
-    type Input = state::App;
-    type Output = Box<EventLoop<()>>;
+    type Output = Box<Option<EventLoop<()>>>;
 }

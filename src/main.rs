@@ -15,7 +15,8 @@ fn main() {
     dbg!("试试使用这个dbg!");
     let debug_this_var = 32;
     dbg!("试试这个变量：{}",debug_this_var);
-    pollster::block_on(process());
+    // pollster::block_on(process());
+    dictation::main();
 }
 
 // 看看这个函数名字是async的

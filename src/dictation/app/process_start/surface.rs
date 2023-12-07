@@ -1,10 +1,22 @@
-use crate::dictation::{common::Ready, app::state};
+use std::borrow::BorrowMut;
+
+use winit::window::Window;
+
+use crate::dictation::{
+    app::state::{self, App},
+    common::Ready,
+};
+
+use super::wgpu_instance;
 
 impl Ready for wgpu::Surface {
-    fn ready(app: &state::App) {
-        Box::new(app.window.as_ref().unwrap().create_surface(&app.event_loop))
-    }
-    type Input = state::App;
+    fn ready(app: &App) -> Self::Output {
+        let inst = app.wgpu_instance.as_mut().unwrap();
+        let window = app.window.as_mut().unwrap();
+        let surface = unsafe { inst.create_surface(&window).unwrap() };
 
-    type Output=Box<wgpu::Surface>;
+        Box::new(Some(surface))
+    }
+    type Output = Box<Option<wgpu::Surface>>;
+    
 }
