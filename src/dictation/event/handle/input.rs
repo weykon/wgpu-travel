@@ -1,7 +1,11 @@
+use winit::{event::{WindowEvent, KeyboardInput, ElementState, VirtualKeyCode}, event_loop::ControlFlow, window::Window};
+
+use crate::dictation::app::state::App;
+
 pub fn handle_any_input(
     event: &WindowEvent,
     control_flow: &mut ControlFlow,
-    app_state: &mut State,
+    app_state: &mut App,
     window: &Window,
 ) {
     match event {
