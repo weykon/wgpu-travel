@@ -12,3 +12,8 @@ pub trait Step {
     fn now(&mut self) -> ();
     fn post(&mut self) -> ();
 }
+
+// 需要什么，就告诉什么
+pub trait Tell {
+    fn tell(&self) -> ();
+}

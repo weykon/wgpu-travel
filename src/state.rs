@@ -1,7 +1,7 @@
 use std::f32::consts;
 
 use crate::ammo::{Vertex, INDICES, VERTICES};
-use crate::camera::{ Camera, CameraUniform};
+use crate::camera::{Camera, CameraUniform};
 use crate::camera_ctrl::CameraController;
 use crate::instance::{Instance, InstanceRaw, INSTANCE_DISPLACEMENT, NUM_INSTANCES_PER_ROW};
 use crate::texture;
@@ -342,7 +342,7 @@ impl State {
 
         {
             let mut render_pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
-            label: Some("Render Pass"),    
+                label: Some("Render Pass"),
                 color_attachments: &[Some(wgpu::RenderPassColorAttachment {
                     view: &view,
                     resolve_target: None,
