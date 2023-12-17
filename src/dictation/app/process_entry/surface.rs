@@ -1,13 +1,4 @@
-use std::borrow::BorrowMut;
-
-use winit::window::Window;
-
-use crate::dictation::{
-    app::state::{self, App},
-    common::Ready,
-};
-
-use super::wgpu_instance;
+use crate::dictation::{app::state::App, common::Ready};
 
 impl Ready for wgpu::Surface {
     fn ready(app: &App) -> Self::Output {
@@ -18,5 +9,4 @@ impl Ready for wgpu::Surface {
         Box::new(Some(surface))
     }
     type Output = Box<Option<wgpu::Surface>>;
-    
 }

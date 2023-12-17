@@ -1,7 +1,5 @@
 use crate::dictation::app::state::App;
 
-use super::super::state;
-
 use super::super::common::Ready;
 
 impl Ready for wgpu::Instance {

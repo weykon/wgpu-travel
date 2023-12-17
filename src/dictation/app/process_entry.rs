@@ -2,10 +2,13 @@ use super::common::Ready;
 use super::state::{self, App};
 use winit::event_loop::EventLoop;
 use winit::window::Window;
+use super::running::Running;
 
 pub(crate) async fn process() -> () {
-    let mut app = state::App::new();
+    let app = state::App::new();
     App::ready(&app);
+    let running = Running::run (&app);
+     
 }
 mod adapter;
 mod event_thing;
@@ -13,6 +16,7 @@ mod surface;
 mod wgpu_instance;
 mod window;
 
+#[allow(unused_macros)]
 macro_rules! ready_all {
     ($($field:ident),* $(,)?) => {
         $(

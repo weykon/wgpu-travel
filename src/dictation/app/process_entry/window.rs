@@ -1,8 +1,6 @@
-use winit::{error::OsError, window::WindowBuilder};
+use winit::window::WindowBuilder;
 
 use crate::dictation::app::state::App;
-
-use super::super::state;
 
 use winit::window::Window;
 

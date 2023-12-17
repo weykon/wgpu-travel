@@ -10,7 +10,7 @@ pub fn handle_events(event_loop: &EventLoop<()>, window: &winit::window::Window,
         } if window_id == window.id() => {
             // 这里这个取false过的，是如果不是摄像头移动就考虑接下来的东西。
             // 这里里面说的是wsad按键的接受
-            if !app_state.input(event) {
+            if !input(event) {
                 // 我在想如何在这里的代码整理一下，不用那么长，起码分一下策略什么的。
                 app_event_handles::handle_any_input(event, control_flow, &mut app_state, &window);
             }
