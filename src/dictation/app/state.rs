@@ -1,3 +1,5 @@
+use std::borrow::BorrowMut;
+
 use super::picture::Picture;
 use super::running::Running;
 use wgpu::Adapter;
@@ -12,11 +14,11 @@ pub struct App {
     pub surface: Box<Option<wgpu::Surface>>,
     pub adapter: Box<Option<Adapter>>,
     pub pictures: Vec<Picture>,
-    pub running : Running
+    pub running: Option<Running>,
 }
 
 impl App {
-    pub fn new(&self) -> Self {
+    pub fn new() -> Self {
         App {
             event_loop: Box::new(None),
             window: Box::new(None),
@@ -24,12 +26,18 @@ impl App {
             surface: Box::new(None),
             adapter: Box::new(None),
             pictures: vec![],
-            running: Running{app: &self}
+            running: None,
         }
     }
 
     pub fn input(&mut self, event: &WindowEvent) -> bool {
-        self.running.camera_controller.process_events(event)
+        if self.running.is_some() {
+            return self
+                .running
+                .as_mut()
+                .is_some_and(|x| x.controller.process_events(event));
+        }
+        return false;
     }
 
     pub fn handle_events(

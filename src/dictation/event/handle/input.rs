@@ -24,7 +24,7 @@ pub fn handle_any_input(
 
         // 窗口大小改变
         WindowEvent::Resized(physical_size) => {
-            app_state.resize(*physical_size);
+            app_state.window.resize(*physical_size);
         }
 
         // 用于更新纹理, 这里是我自己写的吧，写错了的

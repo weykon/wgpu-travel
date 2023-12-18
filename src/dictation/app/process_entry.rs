@@ -8,7 +8,7 @@ pub(crate) async fn process() -> () {
     let app = state::App::new();
     App::ready(&app);
     let running = Running::run (&app);
-     
+    
 }
 mod adapter;
 mod event_thing;
