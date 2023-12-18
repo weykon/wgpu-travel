@@ -10,7 +10,9 @@ pub struct Running {
 
 impl Running {
     pub fn run(app: &App) -> Self {
-        Running { app, camera::Camera {
+        Running { 
+            app,
+            camera::Camera {
 
         } }
     }
