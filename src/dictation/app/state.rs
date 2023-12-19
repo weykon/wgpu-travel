@@ -1,10 +1,10 @@
-use std::borrow::BorrowMut;
-
+use crate::dictation::event;
 use super::picture::Picture;
+use super::rendering::render;
 use super::running::Running;
 use wgpu::Adapter;
 use winit::event::{Event, WindowEvent};
-use winit::event_loop::EventLoop;
+use winit::event_loop::{EventLoop, ControlFlow};
 use winit::window::Window;
 
 pub struct App {
@@ -40,6 +40,8 @@ impl App {
         return false;
     }
 
+    pub fn pre_data_update(&self) {}
+
     pub fn handle_events(
         &self,
         event_loop: &EventLoop<()>,
@@ -55,7 +57,7 @@ impl App {
                 // 这里里面说的是wsad按键的接受
                 if !self.input(event) {
                     // 我在想如何在这里的代码整理一下，不用那么长，起码分一下策略什么的。
-                    app_event_handles::handle_any_input(
+                    event::handle::input::handle_any_input(
                         event,
                         control_flow,
                         &mut app_state,
@@ -64,8 +66,8 @@ impl App {
                 }
             }
             Event::RedrawRequested(window_id) if window_id == window.id() => {
-                app_state.update();
-                match app_state.render() {
+                self.pre_data_update();
+                match render(&mut self) {
                     Ok(_) => {}
                     // 当展示平面的上下文丢失，就需重新配置
                     Err(wgpu::SurfaceError::Lost) => app_state.resize(app_state.size),
