@@ -1,10 +1,11 @@
-use crate::dictation::event;
+use super::config::ConfigStorage;
 use super::picture::Picture;
 use super::rendering::render;
 use super::running::Running;
+use crate::dictation::event;
 use wgpu::Adapter;
 use winit::event::{Event, WindowEvent};
-use winit::event_loop::{EventLoop, ControlFlow};
+use winit::event_loop::{ControlFlow, EventLoop};
 use winit::window::Window;
 
 pub struct App {
@@ -14,7 +15,8 @@ pub struct App {
     pub surface: Box<Option<wgpu::Surface>>,
     pub adapter: Box<Option<Adapter>>,
     pub pictures: Vec<Picture>,
-    pub running: Option<Running>,
+    pub running: Box<Option<Running>>,
+    pub config: Option<ConfigStorage>,
 }
 
 impl App {
@@ -26,7 +28,8 @@ impl App {
             surface: Box::new(None),
             adapter: Box::new(None),
             pictures: vec![],
-            running: None,
+            running: Box::new(None),
+            config: None,
         }
     }
 
@@ -35,7 +38,7 @@ impl App {
             return self
                 .running
                 .as_mut()
-                .is_some_and(|x| x.controller.process_events(event));
+                .is_some_and(|mut x| x.controller.process_events(event));
         }
         return false;
     }
@@ -69,11 +72,12 @@ impl App {
                 self.pre_data_update();
                 match render(&mut self) {
                     Ok(_) => {}
-                    // 当展示平面的上下文丢失，就需重新配置
-                    Err(wgpu::SurfaceError::Lost) => app_state.resize(app_state.size),
-                    // 系统内存不足时，程序应该退出。
+                    Err(wgpu::SurfaceError::Lost) => self
+                        .running
+                        .as_mut()
+                        .unwrap()
+                        .resize(&mut self, self.running.as_mut().unwrap().window_size),
                     Err(wgpu::SurfaceError::OutOfMemory) => *control_flow = ControlFlow::Exit,
-                    // 所有其他错误（过期、超时等）应在下一帧解决
                     Err(e) => eprintln!("{:?}", e),
                 }
             }

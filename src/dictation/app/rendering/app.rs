@@ -1,19 +1,26 @@
-use crate::dictation::app::state::App;
+use std::iter;
+
 use super::Rendering;
+use crate::dictation::app::{config, state::App};
 
 impl Rendering for App {
-    fn render(&mut self) -> Result<(), wgpu::SurfaceError> {
-        let output = self.surface.get_current_texture()?;
+    type Input = ();
+    type Output = Result<(), wgpu::SurfaceError>;
+
+    fn render(&self, input: Self::Input) -> Self::Output {
+        let output = self.surface.as_mut().unwrap().get_current_texture()?;
         let view = output
             .texture
             .create_view(&wgpu::TextureViewDescriptor::default());
 
-        let mut encoder = self
+        let config = self.config.unwrap();
+
+        let encoder = config
             .device
             .create_command_encoder(&wgpu::CommandEncoderDescriptor {
                 label: Some("Render Encoder"),
             });
-
+        let clear_color = wgpu::Color::BLACK;
         {
             let _render_pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
                 label: Some("Render Pass"),
@@ -21,15 +28,15 @@ impl Rendering for App {
                     view: &view,
                     resolve_target: None,
                     ops: wgpu::Operations {
-                        load: wgpu::LoadOp::Clear(self.clear_color),
-                        store: wgpu::StoreOp::Store,
+                        load: wgpu::LoadOp::Clear(clear_color),
+                        store: true,
                     },
                 })],
                 ..Default::default()
             });
         }
 
-        self.queue.submit(iter::once(encoder.finish()));
+        config.queue.submit(iter::once(encoder.finish()));
         output.present();
 
         Ok(())

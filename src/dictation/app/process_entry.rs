@@ -1,13 +1,19 @@
 use super::common::Ready;
+use super::config::device::DeviceConfig;
+use super::config::{config, Config, ConfigStorage};
+use super::running::Running;
 use super::state::{self, App};
 use winit::event_loop::EventLoop;
 use winit::window::Window;
-use super::running::Running;
 
 pub(crate) async fn process() -> () {
     let app = state::App::new();
     App::ready(&app);
-    let running = Running::run (&app);
+
+    let app = config(app);
+
+    let running = Running::run(&app);
+
     
 }
 mod adapter;

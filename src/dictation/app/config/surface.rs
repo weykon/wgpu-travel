@@ -4,9 +4,9 @@ use wgpu::Surface;
 use super::Config;
 
 impl Config for Surface {
-    type Input = &'static App;
+    type Input = App;
     type Output = wgpu::SurfaceConfiguration;
-    fn fixed(&self, app: Self::Input) -> Self::Output {
+    fn fixed(&self, app: &mut Self::Input) -> Self::Output {
         let adapter = app.adapter.as_mut().unwrap();
         let caps = self.get_capabilities(&adapter);
         let size = app.window.as_mut().unwrap().inner_size();
