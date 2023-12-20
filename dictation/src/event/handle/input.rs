@@ -1,6 +1,6 @@
 use winit::{event::{WindowEvent, KeyboardInput, ElementState, VirtualKeyCode}, event_loop::ControlFlow, window::Window};
 
-use crate::dictation::app::state::App;
+use crate::app::state::App;
 
 pub fn handle_any_input(
     event: &WindowEvent,
