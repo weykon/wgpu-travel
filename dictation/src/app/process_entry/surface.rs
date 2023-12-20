@@ -1,4 +1,4 @@
-use crate::dictation::{app::state::App, common::Ready};
+use crate::{app::state::App, common::Ready};
 
 impl Ready for wgpu::Surface {
     fn ready(app: &App) -> Self::Output {

@@ -2,7 +2,7 @@ use super::config::ConfigStorage;
 use super::picture::Picture;
 use super::rendering::render;
 use super::running::Running;
-use crate::dictation::event;
+use crate::event;
 use wgpu::Adapter;
 use winit::event::{Event, WindowEvent};
 use winit::event_loop::{ControlFlow, EventLoop};

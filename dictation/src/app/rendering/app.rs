@@ -1,7 +1,7 @@
 use std::iter;
 
 use super::Rendering;
-use crate::dictation::app::{config, state::App};
+use crate::app::{config, state::App};
 
 impl Rendering for App {
     type Input = ();

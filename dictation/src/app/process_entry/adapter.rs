@@ -1,4 +1,4 @@
-use crate::dictation::app::state::App;
+use crate::app::state::App;
 use super::super::common::Ready;
 use futures::executor::block_on;
 use wgpu::Adapter;

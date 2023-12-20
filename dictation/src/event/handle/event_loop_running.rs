@@ -1,6 +1,6 @@
 use winit::event::Event;
 
-use crate::dictation::app::state::App;
+use crate::app::state::App;
 
 pub fn handle_events(event_loop: &EventLoop<()>, window: &winit::window::Window, app_state: &App) {
     let run = event_loop.run(move |event, _, control_flow| match event {

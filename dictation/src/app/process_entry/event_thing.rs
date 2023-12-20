@@ -1,4 +1,4 @@
-use crate::dictation::app::state::App;
+use crate::app::state::App;
 use winit::event_loop::EventLoop;
 use super::super::common::Ready;
 
