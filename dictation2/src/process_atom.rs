@@ -1,3 +1,5 @@
+use crate::app::App;
+
 pub trait Process {
-    fn process(&self);
+    fn process(&self, app: &App);
 }

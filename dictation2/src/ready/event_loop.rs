@@ -1,7 +1,10 @@
-use crate::ready::Ready;
+use winit::event_loop::EventLoop;
 
-impl Ready for EventLoop {
-    fn process(&self) {
-        // 实现 ready 的处理逻辑
+use crate::{app::App, atom::ready::Ready};
+
+impl Ready for EventLoop<()> {
+    fn ready(&self, app: &App) {
+        println!("EventLoop is ready")
+        
     }
 }

@@ -1,17 +1,23 @@
 mod app;
-pub mod config;
+pub mod atom;
+pub mod handle;
 pub mod process_atom;
 pub mod ready;
-pub mod handle;
 
 use app::App;
+use futures::io::Window;
+use winit::event_loop::EventLoop;
 
 use crate::handle::Handler;
 
 fn main() {
     println!("ok");
-    let app = App {
+    let mut app = App {
         states: Handler { items: Vec::new() },
         configs: Handler { items: Vec::new() },
     };
+
+    app.states.add(Box::new(EventLoop::new()));
+
+    app.ready();
 }
