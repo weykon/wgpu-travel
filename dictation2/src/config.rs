@@ -1,0 +1,11 @@
+use crate::process_atom::Process;
+
+pub trait Config {
+    fn config(&self);
+}
+
+impl Process for dyn Config {
+    fn process(&self) {
+        // 实现 config 的处理逻辑
+    }
+}

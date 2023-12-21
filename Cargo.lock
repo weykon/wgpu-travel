@@ -428,7 +428,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "dictation"
+name = "dictation2"
 version = "0.1.0"
 dependencies = [
  "anyhow",
@@ -1545,22 +1545,6 @@ dependencies = [
  "wayland-client",
  "wayland-cursor",
  "wayland-protocols",
-]
-
-[[package]]
-name = "source_course"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "bytemuck",
- "env_logger",
- "futures",
- "glam",
- "image",
- "log",
- "pollster",
- "wgpu",
- "winit",
 ]
 
 [[package]]

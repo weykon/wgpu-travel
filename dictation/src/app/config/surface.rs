@@ -7,9 +7,9 @@ impl Config for Surface {
     type Input = App;
     type Output = wgpu::SurfaceConfiguration;
     fn fixed(&self, app: &mut Self::Input) -> Self::Output {
-        let adapter = app.adapter.as_mut().unwrap();
+        let adapter = app.adapter.take().unwrap();
         let caps = self.get_capabilities(&adapter);
-        let size = app.window.as_mut().unwrap().inner_size();
+        let size = app.window.take().unwrap().inner_size();
 
         // 以下有很多不知含义的变量，我将其它们都蒙蔽掉，用这里的变量去一一辟出意义
         let config = wgpu::SurfaceConfiguration {

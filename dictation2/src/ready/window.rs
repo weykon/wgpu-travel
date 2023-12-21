@@ -1,0 +1,3 @@
+impl Ready for Window {
+
+}

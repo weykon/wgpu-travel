@@ -32,7 +32,7 @@ macro_rules! ready_all {
 }
 
 impl Ready for state::App {
-    fn ready(app: &App) {
+    fn ready(app: &mut App) {
         app.event_loop = EventLoop::ready(app);
         app.window = Window::ready(app);
         app.wgpu_instance = wgpu::Instance::ready(app);
