@@ -5,7 +5,6 @@ pub mod process_atom;
 pub mod ready;
 
 use app::App;
-use futures::io::Window;
 use winit::event_loop::EventLoop;
 
 use crate::handle::Handler;
