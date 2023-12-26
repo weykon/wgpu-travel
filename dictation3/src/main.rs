@@ -1,9 +1,10 @@
 use std::cell::RefCell;
 
+use wgpu::{Instance, Surface};
 use winit::{event::Event, window::Window};
 
 use crate::{
-    atom::{app::App, event_storage::EventStorage},
+    atom::{adapter, app::App, event_storage::EventStorage},
     ready::ReadyStatic,
 };
 
@@ -12,9 +13,15 @@ fn main() {
 
     let mut event = EventStorage::ready(());
     let window = Window::ready(&event);
+    let wgpu_inst = Instance::ready(());
+    let surface = Surface::ready((wgpu_inst, window));
+    let adapter_storage = adapter::AdapterStorage::ready((wgpu_inst, surface));
+
     let app = App {
         event_storage: RefCell::new(event),
         window: RefCell::new(window),
+        surface: RefCell::new(surface),
+        adapter_storage: Some(Box::new(adapter_storage)),
     };
 
     event.run(move |event, _, control_flow| match event {
@@ -31,5 +38,6 @@ fn main() {
     });
 }
 pub mod atom;
-pub mod ready;
 pub mod handle;
+pub mod ready;
+
