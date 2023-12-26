@@ -1,7 +1,7 @@
 use bytemuck;
 pub struct Instance {
     pub position: glam::Vec3,
-        pub rotation: glam::Quat,
+    pub rotation: glam::Quat,
 }
 
 #[repr(C)]
@@ -27,7 +27,7 @@ pub const INSTANCE_DISPLACEMENT: glam::Vec3 = glam::Vec3::new(
 );
 
 impl InstanceRaw {
-   pub fn desc<'a>() -> wgpu::VertexBufferLayout<'a> {
+    pub fn desc<'a>() -> wgpu::VertexBufferLayout<'a> {
         use std::mem;
         wgpu::VertexBufferLayout {
             array_stride: mem::size_of::<InstanceRaw>() as wgpu::BufferAddress,
