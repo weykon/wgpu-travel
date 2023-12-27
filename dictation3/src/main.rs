@@ -4,7 +4,12 @@ use wgpu::{Instance, Surface};
 use winit::{event::Event, window::Window};
 
 use crate::{
-    atom::{adapter, app::App, event_storage::EventStorage},
+    atom::{
+        adapter::{self, AdapterStorage},
+        app::App,
+        event_storage::EventStorage,
+    },
+    config::Config,
     ready::ReadyStatic,
 };
 
@@ -36,8 +41,10 @@ fn main() {
         }
         _ => {}
     });
+
+    app.surface.borrow_mut().config((&adapter_storage, &window));
 }
 pub mod atom;
+pub mod config;
 pub mod handle;
 pub mod ready;
-

@@ -1,9 +1,9 @@
-use wgpu::{core::command::RenderPass, CommandEncoder, RenderPass, TextureView};
+use wgpu::{RenderPass, CommandEncoder, TextureView};
 
 use super::ReadyStatic;
 
 impl<'pass> ReadyStatic<(CommandEncoder, TextureView), RenderPass<'pass>> for RenderPass<'pass> {
-    fn ready(input: (CommandEncoder, TextureView)) -> RenderPass<'pass> {
+    fn ready(mut input: (CommandEncoder, TextureView)) -> RenderPass<'pass> {
         input.0.begin_render_pass(&wgpu::RenderPassDescriptor {
             label: Some("Render Pass"),
             color_attachments: &[Some(wgpu::RenderPassColorAttachment {
