@@ -4,6 +4,7 @@ pub mod event_storage;
 pub mod wgpu_instance;
 pub mod adapter;
 pub mod surface;
+pub mod render_pass;
 
 pub trait Ready<P, O> {
     fn ready(&mut self, input: P) -> O;
