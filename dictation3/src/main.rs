@@ -10,12 +10,14 @@ use crate::{
         event_storage::EventStorage,
     },
     config::Config,
+    layout::Layout,
     ready::ReadyStatic,
 };
 
 fn main() {
     println!("Hello, world!");
 
+    // ready
     let mut event = EventStorage::ready(());
     let window = Window::ready(&event);
     let wgpu_inst = Instance::ready(());
@@ -27,6 +29,20 @@ fn main() {
         window: RefCell::new(window),
         surface: RefCell::new(surface),
         adapter_storage: Some(Box::new(adapter_storage)),
+    };
+
+    // config
+    app.surface.borrow_mut().config((&adapter_storage, &window));
+
+    // layout
+    let mut texture_layouts = layout::texture::MTextureLayout::new();
+    let mut pipeline_layouts = layout::pipeline::MPipeLineLayout::new();
+    texture_layouts.add(&app);
+    pipeline_layouts.add(&app);
+    
+    let layout_storage = layout::LayoutStorage {
+        texture: texture_layouts,
+        pipeline: pipeline_layouts,
     };
 
     event.run(move |event, _, control_flow| match event {
@@ -41,10 +57,9 @@ fn main() {
         }
         _ => {}
     });
-
-    app.surface.borrow_mut().config((&adapter_storage, &window));
 }
 pub mod atom;
 pub mod config;
 pub mod handle;
+pub mod layout;
 pub mod ready;
