@@ -39,7 +39,10 @@ fn main() {
     let mut pipeline_layouts = layout::pipeline::MPipeLineLayout::new();
     texture_layouts.add(&app);
     pipeline_layouts.add(&app);
-    
+
+    // group
+
+
     let layout_storage = layout::LayoutStorage {
         texture: texture_layouts,
         pipeline: pipeline_layouts,
@@ -63,3 +66,4 @@ pub mod config;
 pub mod handle;
 pub mod layout;
 pub mod ready;
+pub mod group;
