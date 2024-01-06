@@ -40,8 +40,15 @@ fn main() {
     texture_layouts.add(&app);
     pipeline_layouts.add(&app);
 
-    // group
+    // prepare a asset
+    let device = &adapter_storage.device;
+    let queue = &adapter_storage.queue;
+    let texture_bytes = include_bytes!("../../assets/tree.png");
+    let texture_storage =
+        asset::texture::Texture::from_bytes(&device, &queue, texture_bytes, "../assets/tree.png")
+            .unwrap();
 
+    // group
 
     let layout_storage = layout::LayoutStorage {
         texture: texture_layouts,
@@ -61,9 +68,10 @@ fn main() {
         _ => {}
     });
 }
+pub mod asset;
 pub mod atom;
 pub mod config;
+pub mod group;
 pub mod handle;
 pub mod layout;
 pub mod ready;
-pub mod group;

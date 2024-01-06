@@ -11,8 +11,9 @@ pub struct MTextureGroup {
 impl Group for MTextureGroup {
     type Output = wgpu::BindGroup;
 
-    fn add(&mut self, app: &App) {
-        self.storage.push(self.create(app))
+    fn add(&mut self, app: &App, texture_bind_group_layout: BindGroupLayout, texture: Texture) {
+        self.storage
+            .push(self.create(app, texture_bind_group_layout, texture));
     }
 }
 
@@ -22,7 +23,12 @@ impl MTextureGroup {
             storage: Vec::new(),
         }
     }
-    pub fn create(&self, app: &App, texture_bind_group_layout: BindGroupLayout,texture: Texture) -> wgpu::BindGroup {
+    pub fn create(
+        &self,
+        app: &App,
+        texture_bind_group_layout: BindGroupLayout,
+        texture: Texture,
+    ) -> wgpu::BindGroup {
         app.adapter_storage
             .as_ref()
             .unwrap()
