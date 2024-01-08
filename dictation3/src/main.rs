@@ -49,11 +49,14 @@ fn main() {
             .unwrap();
 
     // group
-
     let layout_storage = layout::LayoutStorage {
         texture: texture_layouts,
         pipeline: pipeline_layouts,
     };
+    
+    let texture_groups = group::texture::MTextureGroup::new();
+    let texture_group = texture_groups.create(&app, &texture_layouts, texture_storage.texture);
+
 
     event.run(move |event, _, control_flow| match event {
         Event::WindowEvent { event, window_id } if window_id == window.id() => {

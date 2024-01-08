@@ -1,5 +1,5 @@
 use super::atom::app::App;
-use winit::window::Window;
+use winit::{window::Window, event_loop::ControlFlow};
 
 pub fn handle_window_event(
     event: &winit::event::WindowEvent,

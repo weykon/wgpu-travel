@@ -84,7 +84,7 @@ impl State {
 
         // 添加纹理
         // 取字节，并将其加载到 image 对象中，然后转换为 rgba 动态数组。
-        let diffuse_bytes = include_bytes!("../assets/tree.png");
+        let diffuse_bytes = include_bytes!("../../assets/tree.png");
         let diffuse_texture =
             texture::Texture::from_bytes(&device, &queue, diffuse_bytes, "../assets/tree.png")
                 .unwrap();
