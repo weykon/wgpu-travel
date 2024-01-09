@@ -5,11 +5,12 @@ use winit::{event::Event, window::Window};
 
 use crate::{
     atom::{
-        adapter::{self, AdapterStorage},
+        adapter::{self},
         app::App,
         event_storage::EventStorage,
     },
     config::Config,
+    group::Group,
     layout::Layout,
     ready::ReadyStatic,
 };
@@ -29,6 +30,7 @@ fn main() {
         window: RefCell::new(window),
         surface: RefCell::new(surface),
         adapter_storage: Some(Box::new(adapter_storage)),
+        surface_config: None,
     };
 
     // config
@@ -38,7 +40,8 @@ fn main() {
     let mut texture_layouts = layout::texture::MTextureLayout::new();
     let mut pipeline_layouts = layout::pipeline::MPipeLineLayout::new();
     texture_layouts.add(&app);
-    pipeline_layouts.add(&app);
+
+    pipeline_layouts.add((&app, texture_layouts.storage.iter().collect()));
 
     // prepare a asset
     let device = &adapter_storage.device;
@@ -53,10 +56,16 @@ fn main() {
         texture: texture_layouts,
         pipeline: pipeline_layouts,
     };
-    
-    let texture_groups = group::texture::MTextureGroup::new();
-    let texture_group = texture_groups.create(&app, &texture_layouts, texture_storage.texture);
 
+    let mut texture_groups = group::texture::MTextureGroup::new();
+
+    let a_texture_group = texture_layouts.storage[0];
+    let texture_group = texture_groups.add((
+        &app,
+        &a_texture_group,
+        &texture_storage.view,
+        &texture_storage.sampler,
+    ));
 
     event.run(move |event, _, control_flow| match event {
         Event::WindowEvent { event, window_id } if window_id == window.id() => {
@@ -78,3 +87,4 @@ pub mod group;
 pub mod handle;
 pub mod layout;
 pub mod ready;
+pub mod rear_asset;

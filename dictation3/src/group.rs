@@ -8,7 +8,6 @@ pub struct Groups {
     pub texture: texture::MTextureGroup,
 }
 
-pub trait Group {
-    type Output;
-    fn add(&mut self, app: &App);
+pub trait Group<P, O> {
+    fn add(&mut self, input: P) -> O;
 }

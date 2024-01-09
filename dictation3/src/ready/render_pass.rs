@@ -1,4 +1,4 @@
-use wgpu::{RenderPass, CommandEncoder, TextureView};
+use wgpu::{CommandEncoder, RenderPass, TextureView};
 
 use super::ReadyStatic;
 
@@ -16,10 +16,12 @@ impl<'pass> ReadyStatic<(CommandEncoder, TextureView), RenderPass<'pass>> for Re
                         b: 0.3,
                         a: 1.0,
                     }),
-                    store: true,
+                    store: wgpu::StoreOp::Store,
                 },
             })],
             depth_stencil_attachment: None,
+            timestamp_writes: None,
+            occlusion_query_set: None,
         })
     }
 }

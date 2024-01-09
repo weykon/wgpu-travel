@@ -3,9 +3,8 @@ use crate::atom::app::App;
 pub mod pipeline;
 pub mod texture;
 
-pub trait Layout {
-    type Output;
-    fn add(&mut self, app: &App);
+pub trait Layout<Input, O> {
+    fn add(&mut self, input: Input) -> O;
 }
 
 pub struct LayoutStorage {

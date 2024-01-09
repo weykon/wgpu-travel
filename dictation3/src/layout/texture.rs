@@ -3,13 +3,12 @@ use crate::atom::app::App;
 use super::Layout;
 
 pub struct MTextureLayout {
-    storage: Vec<wgpu::BindGroupLayout>,
+    pub storage: Vec<wgpu::BindGroupLayout>,
 }
 
-impl Layout for MTextureLayout {
-    type Output = wgpu::BindGroupLayout;
-
-    fn add(&mut self, app: &App) {
+impl Layout<&App, ()> for MTextureLayout {
+    fn add(&mut self, input: &App) {
+        let app = input;
         self.storage.push(self.create(app))
     }
 }
