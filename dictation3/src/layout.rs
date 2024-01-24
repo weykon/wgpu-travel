@@ -1,5 +1,3 @@
-use crate::atom::app::App;
-
 pub mod pipeline;
 pub mod texture;
 

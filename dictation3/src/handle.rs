@@ -1,5 +1,5 @@
 use super::atom::app::App;
-use winit::{window::Window, event_loop::ControlFlow};
+use winit::{event_loop::ControlFlow, window::Window};
 
 pub fn handle_window_event(
     event: &winit::event::WindowEvent,
@@ -18,7 +18,7 @@ pub fn handle_redraw_requested(
     app_state.update();
     match app_state.render() {
         Ok(_) => {}
-        Err(wgpu::SurfaceError::Lost) => app_state.resize(app_state.size),
+        Err(wgpu::SurfaceError::Lost) => app_state.resize(app_state.size.unwrap()),
         Err(wgpu::SurfaceError::OutOfMemory) => *control_flow = ControlFlow::Exit,
         Err(e) => eprintln!("{:?}", e),
     }

@@ -5,8 +5,13 @@ use crate::atom::adapter::AdapterStorage;
 
 use super::Config;
 
-impl Config<(&AdapterStorage, &Window), ()> for Surface {
-    fn config(&mut self, input: (&AdapterStorage, &Window)) {
+impl Config<(&AdapterStorage, &Window), (wgpu::SurfaceConfiguration, winit::dpi::PhysicalSize<u32>)>
+    for Surface
+{
+    fn config(
+        &mut self,
+        input: (&AdapterStorage, &Window),
+    ) -> (wgpu::SurfaceConfiguration, winit::dpi::PhysicalSize<u32>) {
         let caps = self.get_capabilities(&input.0.adapter);
         let size = input.1.inner_size();
         let config = wgpu::SurfaceConfiguration {
@@ -19,5 +24,6 @@ impl Config<(&AdapterStorage, &Window), ()> for Surface {
             view_formats: vec![],
         };
         self.configure(&input.0.device, &config);
+        (config, size)
     }
 }

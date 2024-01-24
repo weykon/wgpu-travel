@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = ["dictation3","source_course"]
-default-members = ["dictation3"]
+members = ["dictation4","source_course"]
+default-members = ["dictation4"]
 
 # members = ["dictation", "source_course"]

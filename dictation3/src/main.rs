@@ -1,4 +1,4 @@
-use std::cell::RefCell;
+use std::{borrow::BorrowMut, cell::RefCell};
 
 use wgpu::{Instance, Surface};
 use winit::{event::Event, window::Window};
@@ -13,6 +13,7 @@ use crate::{
     group::Group,
     layout::Layout,
     ready::ReadyStatic,
+    scheduler::Scheduler,
 };
 
 fn main() {
@@ -25,22 +26,35 @@ fn main() {
     let surface = Surface::ready((wgpu_inst, window));
     let adapter_storage = adapter::AdapterStorage::ready((wgpu_inst, surface));
 
-    let app = App {
+    // add a scheduler to manager assets
+    let scheduler = Scheduler {
+        pipeline_layouts: None,
+        texture_layouts: None,
+    };
+
+    let mut app = App {
         event_storage: RefCell::new(event),
         window: RefCell::new(window),
         surface: RefCell::new(surface),
         adapter_storage: Some(Box::new(adapter_storage)),
         surface_config: None,
+        scheduler: Box::new(None),
+        size : None,
     };
 
-    // config
-    app.surface.borrow_mut().config((&adapter_storage, &window));
+    let surface_config = app.surface.borrow_mut().config((&adapter_storage, &window));
+    app.surface_config = Some(surface_config.0);
+    app.size = Some(surface_config.1);
 
     // layout
     let mut texture_layouts = layout::texture::MTextureLayout::new();
     let mut pipeline_layouts = layout::pipeline::MPipeLineLayout::new();
-    texture_layouts.add(&app);
+    app.scheduler.replace(scheduler::Scheduler {
+        pipeline_layouts: Some(pipeline_layouts),
+        texture_layouts: Some(texture_layouts),
+    });
 
+    texture_layouts.add(&app);
     pipeline_layouts.add((&app, texture_layouts.storage.iter().collect()));
 
     // prepare a asset
@@ -88,3 +102,4 @@ pub mod handle;
 pub mod layout;
 pub mod ready;
 pub mod rear_asset;
+pub mod scheduler;

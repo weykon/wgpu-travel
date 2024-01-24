@@ -1,11 +1,11 @@
-use wgpu::{BindGroupLayout, PipelineLayout};
+use wgpu::BindGroupLayout;
 
 use crate::atom::app::App;
 
 use super::Layout;
 
 pub struct MPipeLineLayout {
-    storage: Vec<wgpu::PipelineLayout>,
+    pub storage: Vec<wgpu::PipelineLayout>,
 }
 
 impl Layout<(&App, Vec<&BindGroupLayout>), ()> for MPipeLineLayout {

@@ -7,7 +7,6 @@ use winit::{
 };
 mod instance;
 use wgpu_learn::state::State;
-mod dictation;
 
 fn main() {
     println!("Hello, Here's weykon's wgpu learning repo!");

@@ -6,6 +6,8 @@ use winit::{
     window::Window,
 };
 
+use crate::scheduler::Scheduler;
+
 use super::{adapter::AdapterStorage, event_storage::EventStorage};
 
 pub struct App {
@@ -14,6 +16,8 @@ pub struct App {
     pub surface: RefCell<Surface>,
     pub adapter_storage: Option<Box<AdapterStorage>>,
     pub surface_config: Option<wgpu::SurfaceConfiguration>,
+    pub scheduler: Box<Option<Scheduler>>,
+    pub size: Option<winit::dpi::PhysicalSize<u32>>,
 }
 impl App {
     pub fn input(&mut self, event: &WindowEvent) -> bool {
@@ -98,7 +102,12 @@ impl App {
                 depth_stencil_attachment: None,
                 occlusion_query_set: None,
             });
-            render_pass.set_pipeline(&self.render_pipeline);
+            let render_pipeline = self.scheduler.borrow_mut().pipeline_layouts.unwrap().storage[0]
+                .render_pipeline
+                .as_ref()
+                .unwrap();
+
+            render_pass.set_pipeline(&render_pipeline);
             render_pass.set_bind_group(0, &self.diffuse_bind_group, &[]);
             render_pass.set_vertex_buffer(0, self.vertex_buffer.slice(..));
             render_pass.set_index_buffer(self.index_buffer.slice(..), wgpu::IndexFormat::Uint16);
